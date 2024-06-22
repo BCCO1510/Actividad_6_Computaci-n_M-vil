@@ -1,0 +1,89 @@
+<app-header [showMenu]="true" title="Inicio"></app-header>
+
+<ion-content>
+    <!-- Refrescar Página -->
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Tabla de ganancias -->
+
+    <ion-card mode="ios" color="dark" class="d-flex-center ion-text-center" *ngIf="!loading && products.length">
+      <div>
+        <h5>{{products.length}}</h5>
+        <p>Productos</p>
+      </div>
+      <div>
+        <h5>{{getProfits() | currency: 'COP'}}</h5>
+        <p>Valor Inventario</p>
+      </div>
+    </ion-card>
+
+    <!-- Productos cargados -->
+    <ion-list *ngIf="!loading">
+      <ion-item-sliding class="product-item" *ngFor="let p of products">
+        <ion-item>
+          <ion-avatar slot="start">
+            <img [src]="p.image" />
+          </ion-avatar>
+          <ion-label>
+            <div class="name">{{p.name}}</div>
+            <div class="data">
+              <strong>Precio:</strong>{{p.price | currency: 'COP'}} <br>
+              <strong>Unidades Almacenadas: </strong> {{p.units}}
+            </div>
+
+            <ion-chip color="success" mode="ios" outline="true">
+              <ion-label>Valor Unidades: {{p.price * p.units | currency: 'COP'}}</ion-label>
+            </ion-chip>
+          </ion-label>
+        </ion-item>
+
+        <!-- Opciones -->
+        <ion-item-options>
+        <!-- Editar -->
+          <ion-item-option (click)="addUpdateProduct(p)">
+            <ion-icon class="option-btn" name="create-outline"></ion-icon>
+          </ion-item-option>
+
+        <!-- Eliminar -->
+          <ion-item-option (click)="ConfirmDeleteProduct(p)" color="danger">
+            <ion-icon class="option-btn" name="trash-outline"></ion-icon>
+          </ion-item-option>
+
+
+        </ion-item-options>
+
+
+      </ion-item-sliding>
+    </ion-list>
+  
+  <!-- Pantalla de carga en procesos -->
+
+  <ion-list *ngIf="loading">
+    
+      <ion-item class="product-item" *ngFor="let p of [1,1,1,1,1,1,1]">
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <div><ion-skeleton-text animated style="width: 50%"></ion-skeleton-text></div>
+          <div><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></div>
+        </ion-label>
+      </ion-item>
+
+  </ion-list>
+
+  <div *ngIf="!loading && !products.length" class="empty">
+      <ion-icon name="cube-outline"></ion-icon>
+      <h3>No hay productos disponibles</h3>
+  </div>
+
+  <!-- Crear Producto -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success" (click)="addUpdateProduct()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>  
